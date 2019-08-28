@@ -4,7 +4,7 @@ import List from './List';
 import { TicketForm } from '../../forms';
 
 import Box from '@material-ui/core/Box';
-import Dialog from '@material-ui/core/Dialog';
+import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 
 import data from '../dataSample';
 
@@ -26,7 +26,10 @@ const Board = () => (
 			</Box>
 		</div>
 		<Dialog open={true}>
-			<TicketForm />
+			<DialogTitle>New Card</DialogTitle>
+			<DialogContent>
+				<TicketForm />
+			</DialogContent>
 		</Dialog>
 	</>
 );

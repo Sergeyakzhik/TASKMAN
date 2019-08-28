@@ -2,23 +2,64 @@ import React from 'react';
 import { Formik, Field, Form } from 'formik';
 import { TextField } from 'formik-material-ui';
 
+import { makeStyles } from '@material-ui/core/styles';
+import { OutlinedInput } from '@material-ui/core';
+
 import Button from '@material-ui/core/Button';
 
-const TicketForm = () => (
-	<Formik
-		onSubmit={(values, actions) => {
+const useStyles = makeStyles({
+	container: {
+		display: 'flex',
+		flexDirection: 'column'
+	},	
+	textField: {
+		// width: '400px',
+		// border: 'none',
+		// "&:hover": {
+		// 	border: 'none',
+		// },
+		// "& fieldset": {
+		// 	// borderColor: '#13659C',
+		// 	"&:hover": {
+		// 		border: 'none',
+		// 	}	
+		// }
+	}
+});
 
-		}}
-		render={({ errors, status, touched, isSubmitting }) => (
-			<Form>
-				<Field type='text' name='title' component={TextField} />
-				<Field type='text' name='description' component={TextField} />
-				<Button type='submit'>
-                    Submit
-				</Button>
-			</Form>
-		)}
-	/>
-);
+const TicketForm = () => {
+	const classes = useStyles();
+
+	return (
+		<Formik
+			onSubmit={(values, actions) => {
+
+			}}
+			render={({ errors, status, touched, isSubmitting }) => (
+				<Form className={classes.container}>
+					<Field 
+						placeholder="Title"
+						className={classes.textField} 
+						type='text' 
+						name='title' 
+						variant="outlined" 
+						component={OutlinedInput} 
+					/>
+					<Field 
+						placeholder="Description"
+						className={classes.textField} 
+						type='text' 
+						name='description' 
+						variant="outlined"
+						component={OutlinedInput} 
+					/>
+					<Button type='submit'>
+						Add Card
+					</Button>
+				</Form>
+			)}
+		/>
+	);	
+};
 
 export default TicketForm;

@@ -18,7 +18,6 @@ const useStyles = makeStyles({
 
 const List = ({ title }) => {
 	const classes = useStyles(); 
-
     
 	return (
 		<Card raised className={classes.card}>  
