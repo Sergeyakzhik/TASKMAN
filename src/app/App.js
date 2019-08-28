@@ -5,6 +5,8 @@ import {
 } from 'react-router-dom';
 import WebFont from 'webfontloader';
 
+import { Board } from '../app/board';
+
 WebFont.load({
 	google: {
 		families: ['Ubuntu: 300, 400, 500, 700']
@@ -14,7 +16,7 @@ WebFont.load({
 const App = () => (
 	<Router>
 		<div>
-			{/* <Route exact path='/' component={} /> */}
+			<Route exact path='/' component={Board} /> 
 		</div> 
 	</Router>
 );
