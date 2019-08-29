@@ -20,17 +20,47 @@ const muiTheme = createMuiTheme({
 	overrides: {
 		MuiOutlinedInput: {
 			root: {
-				background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+				marginBottom: '10px',
 				padding: '0 30px',
-				boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+				boxShadow: '0 3px 4px -1px rgba(128, 128, 128, 0.3)',
 				borderWidth: 2,
+				borderRadius: '6px',
+				backgroundColor: '#FFF',
 				'&$focused $notchedOutline': {
-					borderColor: '#13659C'
+					borderColor: '#10679E'
 				},
 				'&:hover:not($disabled):not($focused):not($error) $notchedOutline': {
-					borderColor: '#13659C'
+					borderColor: '#10679E'
 				},
 			},
+			input: {
+				
+			},
+			notchedOutline: {
+				
+			}
+		},
+		MuiDialog: {
+			paper: {
+				width: '600px',
+				backgroundColor: '#E6F7FF'
+			}
+		},
+		MuiDialogTitle: {
+			root: {
+				fontSize: '25px',
+				textAlign: 'center',
+				color: '#10679E',
+				fontWeight: '900'
+			}
+		},
+		MuiButton: {
+			root: {
+				backgroundColor: '#10679E',
+				'&:hover': {
+					backgroundColor: '#6BA9D0',
+				}
+			}
 		},
 	},
 });

@@ -7,12 +7,17 @@ import CardContent from '@material-ui/core/CardContent';
 
 const useStyles = makeStyles({
 	card: {
-		backgroundColor: '#E6F7FF',
+		backgroundColor: '#10679E',
 		width: '385px' 
 	},
 	cardHeader: {
-		height: '51px',
+		height: '25px',
 		backgroundColor: '#103F65'
+	},
+	title: {
+		color: '#FFF',
+		textAlign: 'center',
+		fontSize: '25px'
 	}
 });
 
@@ -21,7 +26,7 @@ const List = ({ title }) => {
     
 	return (
 		<Card raised className={classes.card}>  
-			<CardHeader title={title} className={classes.cardHeader} />
+			<CardHeader title={title} className={classes.cardHeader} classes={{title: classes.title}} />
 			<CardContent />
 		</Card>
 	);

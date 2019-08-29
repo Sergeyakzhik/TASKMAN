@@ -3,7 +3,6 @@ import { Formik, Field, Form } from 'formik';
 import { TextField } from 'formik-material-ui';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { OutlinedInput } from '@material-ui/core';
 
 import Button from '@material-ui/core/Button';
 
@@ -12,18 +11,9 @@ const useStyles = makeStyles({
 		display: 'flex',
 		flexDirection: 'column'
 	},	
-	textField: {
-		// width: '400px',
-		// border: 'none',
-		// "&:hover": {
-		// 	border: 'none',
-		// },
-		// "& fieldset": {
-		// 	// borderColor: '#13659C',
-		// 	"&:hover": {
-		// 		border: 'none',
-		// 	}	
-		// }
+	button: {
+		width: '200px',
+		margin: '10px auto'
 	}
 });
 
@@ -38,22 +28,20 @@ const TicketForm = () => {
 			render={({ errors, status, touched, isSubmitting }) => (
 				<Form className={classes.container}>
 					<Field 
-						placeholder="Title"
-						className={classes.textField} 
+						label="Title"
 						type='text' 
 						name='title' 
 						variant="outlined" 
-						component={OutlinedInput} 
+						component={TextField} 
 					/>
 					<Field 
-						placeholder="Description"
-						className={classes.textField} 
+						label="Description"
 						type='text' 
 						name='description' 
 						variant="outlined"
-						component={OutlinedInput} 
+						component={TextField} 
 					/>
-					<Button type='submit'>
+					<Button className={classes.button} type='submit'>
 						Add Card
 					</Button>
 				</Form>
