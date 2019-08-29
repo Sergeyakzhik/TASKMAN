@@ -60,6 +60,9 @@ const muiTheme = createMuiTheme({
 				'&:hover': {
 					backgroundColor: '#6BA9D0',
 				}
+			},
+			text: {
+				color: '#E6F7FF'
 			}
 		},
 	},
