@@ -13,7 +13,7 @@ const useStyles = makeStyles({
 
 });
 
-const Board = () => {
+const Board = props => {
 	const classes = useStyles();
 
 	return (
@@ -36,7 +36,7 @@ const Board = () => {
 			<Dialog open={true}>
 				<DialogTitle disableTypography>New Card</DialogTitle>
 				<DialogContent>
-					<TicketForm />
+					<TicketForm handleSubmit={props.handleSubmit} />
 				</DialogContent>
 			</Dialog>
 		</>

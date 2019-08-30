@@ -17,14 +17,12 @@ const useStyles = makeStyles({
 	}
 });
 
-const TicketForm = () => {
+const TicketForm = props => {
 	const classes = useStyles();
 
 	return (
 		<Formik
-			onSubmit={(values, actions) => {
-
-			}}
+			onSubmit={props.handleSubmit}
 			render={({ errors, status, touched, isSubmitting }) => (
 				<Form className={classes.container}>
 					<Field 
