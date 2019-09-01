@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
  
 import List from './List';
@@ -14,6 +14,7 @@ const useStyles = makeStyles({
 });
 
 const Board = props => {
+	const [isDialogOpen, openDialog] = useState(false);
 	const classes = useStyles();
 
 	return (
@@ -28,12 +29,13 @@ const Board = props => {
 						<Box key={title} m={2}>
 							<List
 								title={title}
+								openDialog={openDialog}
 							/>
 						</Box>
 					))}
 				</Box>
 			</div>
-			<Dialog open={true}>
+			<Dialog open={isDialogOpen}>
 				<DialogTitle disableTypography>New Card</DialogTitle>
 				<DialogContent>
 					<TicketForm handleSubmit={props.handleSubmit} />

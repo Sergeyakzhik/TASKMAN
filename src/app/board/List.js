@@ -1,9 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
+import { Card, CardHeader, CardContent, Button } from '@material-ui/core';
 
 const useStyles = makeStyles({
 	card: {
@@ -21,13 +19,16 @@ const useStyles = makeStyles({
 	}
 });
 
-const List = ({ title }) => {
+const List = ({ title, openDialog }) => {
 	const classes = useStyles(); 
     
 	return (
 		<Card raised className={classes.card}>  
 			<CardHeader title={title} className={classes.cardHeader} classes={{title: classes.title}} />
 			<CardContent />
+			<Button onClick={() => openDialog(true)}>
+				Add Ticket
+			</Button>
 		</Card>
 	);
 };
