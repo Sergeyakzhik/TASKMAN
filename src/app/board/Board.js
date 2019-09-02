@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
  
 import List from './List';
@@ -7,14 +7,11 @@ import { TicketForm } from '../../forms';
 import Box from '@material-ui/core/Box';
 import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 
-import data from '../dataSample';
-
 const useStyles = makeStyles({
 
 });
 
 const Board = props => {
-	const [isDialogOpen, openDialog] = useState(false);
 	const classes = useStyles();
 
 	return (
@@ -25,17 +22,19 @@ const Board = props => {
 					flexWrap="nowrap"
 					m={20}
 				>
-					{data.board.lists.map(({ title }) => (
-						<Box key={title} m={2}>
+					{props.listNames.map(name => (
+						<Box key={name} m={2}>
 							<List
-								title={title}
-								openDialog={openDialog}
+								title={props.lists[name].title}
+								name={name}
+								tickets={props.lists[name].tickets}
+								openDialog={props.setOpen}
 							/>
 						</Box>
 					))}
 				</Box>
 			</div>
-			<Dialog open={isDialogOpen}>
+			<Dialog open={props.openedDialog} onClose={() => props.setOpen(null)}>
 				<DialogTitle disableTypography>New Card</DialogTitle>
 				<DialogContent>
 					<TicketForm handleSubmit={props.handleSubmit} />
