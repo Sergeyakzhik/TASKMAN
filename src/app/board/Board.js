@@ -1,4 +1,5 @@
 import React from 'react';
+import { DragDropContext } from 'react-beautiful-dnd';
 import { makeStyles } from '@material-ui/core/styles';
  
 import List from './List';
@@ -15,7 +16,7 @@ const Board = props => {
 	const classes = useStyles();
 
 	return (
-		<>
+		<DragDropContext onDragEnd={props.onDragEnd}>
 			<div style={{ width: '100%' }}>
 				<Box
 					display="flex"
@@ -29,6 +30,7 @@ const Board = props => {
 								name={name}
 								tickets={props.lists[name].tickets}
 								openDialog={props.setOpen}
+								onDragEnd={props.onDragEnd}
 							/>
 						</Box>
 					))}
@@ -40,7 +42,7 @@ const Board = props => {
 					<TicketForm handleSubmit={props.handleSubmit} />
 				</DialogContent>
 			</Dialog>
-		</>
+		</DragDropContext>
 	);
 	
 };

@@ -53,8 +53,49 @@ const addTicket = (state = INITIAL_STATE, action) => ({
 	}
 });
 
+const moveTicket = (state = INITIAL_STATE, action) => {
+	if (action.source.droppableId === action.destination.droppableId) {
+		const result = [ ...state.lists[action.source.droppableId].tickets ];
+		const [removed] = result.splice(action.source.index, 1);
+		result.splice(action.destination.index, 0, removed);
+
+		return {
+			...state,
+			lists: {
+				...state.lists, 
+				[action.source.droppableId]: {
+					...state.lists[action.source.droppableId], 
+					tickets: result
+				}
+			}
+		};
+	} else {
+		const sourceClone = [ ...state.lists[action.source.droppableId].tickets ];
+		const destinationClone = [ ...state.lists[action.destination.droppableId].tickets ];
+		const [removed] = sourceClone.splice(action.source.index, 1);
+
+		destinationClone.splice(action.destination.index, 0, removed);
+
+		return {
+			...state,
+			lists: {
+				...state.lists, 
+				[action.source.droppableId]: {
+					...state.lists[action.source.droppableId], 
+					tickets: sourceClone
+				},
+				[action.destination.droppableId]: {
+					...state.lists[action.destination.droppableId], 
+					tickets: destinationClone
+				}
+			}
+		};
+	}
+};
+
 const HANDLERS = {
-	[Types.ADD_TICKET]: addTicket
+	[Types.ADD_TICKET]: addTicket,
+	[Types.MOVE_TICKET]: moveTicket
 };
 
 export default createReducer(INITIAL_STATE, HANDLERS);

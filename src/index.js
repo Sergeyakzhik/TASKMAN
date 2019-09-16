@@ -55,6 +55,11 @@ const muiTheme = createMuiTheme({
 				fontWeight: '900'
 			}
 		},
+		MuiDialogContent: {
+			root: {
+				padding: '8px 10px'
+			}
+		},
 		MuiButton: {
 			root: {
 				backgroundColor: '#10679E',
@@ -65,7 +70,7 @@ const muiTheme = createMuiTheme({
 			text: {
 				color: '#E6F7FF'
 			}
-		},
+		}
 	},
 });
 

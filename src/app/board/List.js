@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, memo } from 'react';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Ticket from './Ticket';
@@ -33,11 +34,28 @@ const List = ({ title, name, tickets, openDialog }) => {
 	return (
 		<Card raised className={classes.card}>  
 			<CardHeader title={title} className={classes.cardHeader} classes={{title: classes.title}} />
-			<CardContent>
-				{tickets.map(ticket => (
-					<Ticket title={ticket.title} />
-				))}
-			</CardContent>
+			<Droppable droppableId={name}>
+				{provided => (
+					<div ref={provided.innerRef} {...provided.droppableProps}>
+						<CardContent>
+							{tickets.map((ticket, ind) => (
+								<Draggable key={ind + title} draggableId={ticket.title + ind + title} index={ind}> 
+									{provided => (
+										<div
+											ref={provided.innerRef}
+											{...provided.draggableProps}
+											{...provided.dragHandleProps} 
+										>
+											<Ticket title={ticket.title} />
+										</div>
+									)}
+								</Draggable>
+							))}
+							{provided.placeholder}
+						</CardContent>
+					</div>
+				)}
+			</Droppable>
 			<Button className={classes.button} onClick={() => openDialog(name)}>
 				Add Ticket
 			</Button>
