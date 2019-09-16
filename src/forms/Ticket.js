@@ -69,7 +69,10 @@ const TicketForm = props => {
 						</Grid>
 						<Grid item xs={1}>
 							<Grid container direction='column' justify='center' alignContent='center' alignItems='center'>
-								<LabelField />
+								<Field 
+									name='color' 
+									component={LabelField} 
+								/>
 								<Fab className={classes.fab} disableRipple>
 									<CheckBoxOutlined />
 								</Fab>

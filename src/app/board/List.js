@@ -1,4 +1,4 @@
-import React, { useEffect, memo } from 'react';
+import React, { useEffect } from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { makeStyles } from '@material-ui/core/styles';
 
