@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Field, Form } from 'formik';
 import { TextField } from 'formik-material-ui';
 
@@ -41,7 +41,16 @@ const useStyles = makeStyles({
 });
 
 const TicketForm = props => {
+	const [anchorEl, openLabelMenu] = useState(null);
 	const classes = useStyles();
+    
+	const showLabelMenu = e => {
+		openLabelMenu(e.currentTarget);
+	};
+    
+	const hideLabelMenu = () => {
+		openLabelMenu(null);
+	};
 
 	return (
 		<Formik
@@ -72,13 +81,20 @@ const TicketForm = props => {
 						</Grid>
 						<Grid item xs={1}>
 							<Grid container direction='column' justify='center' alignContent='center' alignItems='center'>
+								<Fab className={classes.fab} aria-describedby='color-popper' onClick={showLabelMenu} disableRipple>
+									<ColorLensOutlined />
+								</Fab>
 								<Field 
 									name='color' 
-									component={LabelField} 
+									component={props => <LabelField anchorEl={anchorEl} hideMenu={hideLabelMenu} { ...props } />} 
 								/>
 								<Fab className={classes.fab} disableRipple>
 									<CheckBoxOutlined />
 								</Fab>
+								<Field 
+									name='checkList' 
+									component={props => <CheckList { ...props } />} 
+								/>
 								<Fab className={classes.fab} disableRipple>
 									<ScheduleOutlined />
 								</Fab>

@@ -13,7 +13,7 @@ const useStyles = makeStyles({
 	}
 });
 
-const CheckList = () => { 
+const CheckList = ({ field, form, anchorEl, hideMenu, ...props }) => { 
 	const [tasks, handleUpdate] = useState({
 		task1: false,
 		task2: false,
@@ -22,7 +22,7 @@ const CheckList = () => {
 	const [taskNames, changeOrder] = useState(['task1', 'task2', 'task3']);
 	const classes = useStyles();
     
-	const handleChange = e => {
+	const handleChange = e => {										//add function for new tasks
 		const taskValue = e.target.value;
 		const isChecked = tasks[taskValue];
         
@@ -68,6 +68,8 @@ const CheckList = () => {
 													<Checkbox checked={tasks[item]} onChange={handleChange} value={item} />
 												}
 												label={item}
+												{...field}
+												{...props}
 											/>
 										</div>
 									)}

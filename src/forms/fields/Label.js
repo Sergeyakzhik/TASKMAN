@@ -2,14 +2,9 @@ import React, { useState } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import Button from '@material-ui/core/Button';
-import Fab from '@material-ui/core/Fab';
-import Grid from '@material-ui/core/Grid';
 import Popover from '@material-ui/core/Popover';
 import Paper from '@material-ui/core/Paper';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-
-import ColorLensOutlined from '@material-ui/icons/ColorLensOutlined';
 
 const colors = {
 	RED: 'red',
@@ -53,45 +48,28 @@ const ColorBox = props => (
 	</div>
 );
 
-const Label = ({ field, form, ...props }) => {
-	const [anchorEl, setOpen] = useState(null);
+const Label = ({ field, form, anchorEl, hideMenu, ...props }) => {
 	const classes = useStyles();
     
-	const showMenu = e => {
-		setOpen(e.currentTarget);
-	};
-    
-	const hideMenu = () => {
-		setOpen(null);
-	};
-
 	const selectColor = color => {
 		form.setFieldValue(field.name, color);
-		setOpen(null);
+		hideMenu(null);
 	};
 
-	const open = Boolean(anchorEl);
-  	const id = open ? 'color-popper' : undefined;
-
 	return (
-        <>
-            <Fab className={classes.fab} aria-describedby={id} onClick={showMenu} disableRipple>
-            	<ColorLensOutlined />
-            </Fab>
-            <Popover id={id} open={open} anchorEl={anchorEl} transition>
-            	<Paper className={classes.menu}>
-            		{Object.keys(colors).map(color => (
-            			<ColorBox 
-            				key={color} 
-            				className={`${classes.colorBox} ${classes[color]}`} 
-            				onClick={e => selectColor(color, e)} 
-            				{...field} 
-            				{...props}
-            			/>
-            		))}
-            	</Paper>
-            </Popover>
-        </>
+		<Popover id='color-popper' open={!!anchorEl} anchorEl={anchorEl} transition>
+			<Paper className={classes.menu}>
+				{Object.keys(colors).map(color => (
+					<ColorBox 
+						key={color} 
+						className={`${classes.colorBox} ${classes[color]}`} 
+						onClick={e => selectColor(color, e)} 
+						{...field} 
+						{...props}
+					/>
+				))}
+			</Paper>
+		</Popover>
 	);	
 };
 
