@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik, Field, Form } from 'formik';
 import { TextField } from 'formik-material-ui';
 
-import { LabelField } from './fields';
+import { LabelField, CheckList } from './fields';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -65,6 +65,9 @@ const TicketForm = props => {
 								variant='outlined'
 								fullWidth
 								component={TextField} 
+							/>
+							<CheckList 
+								
 							/>
 						</Grid>
 						<Grid item xs={1}>

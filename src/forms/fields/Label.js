@@ -11,14 +11,14 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 import ColorLensOutlined from '@material-ui/icons/ColorLensOutlined';
 
-const colors = [
-	{ name: 'red', color: 'red' }, 
-	{ name: 'orange', color: 'orange' }, 
-	{ name: 'yellow', color: 'yellow' }, 
-	{ name: 'green', color: 'green' }, 
-	{ name: 'blue', color: 'blue' }, 
-	{ name: 'purple', color: 'purple' }, 
-];
+const colors = {
+	RED: 'red',
+	ORANGE: 'orange',
+	YELLOW: 'yellow',
+	GREEN: 'green',
+	BLUE: 'blue',
+	PURPLE: 'purple'
+};
 
 const styleObject = {
 	menu: {
@@ -42,9 +42,9 @@ const styleObject = {
 	}
 };
 
-colors.forEach(item => {
-	styleObject[item.name] = { backgroundColor: item.color };
-});
+for (let key in colors) {
+	styleObject[key] = { backgroundColor: colors[key] };
+}
 
 const useStyles = makeStyles(styleObject);
 
@@ -53,7 +53,7 @@ const ColorBox = props => (
 	</div>
 );
 
-const Label = ({ field, ...props }) => {
+const Label = ({ field, form, ...props }) => {
 	const [anchorEl, setOpen] = useState(null);
 	const classes = useStyles();
     
@@ -66,12 +66,12 @@ const Label = ({ field, ...props }) => {
 	};
 
 	const selectColor = color => {
-		field.onChange(color);
+		form.setFieldValue(field.name, color);
 		setOpen(null);
 	};
 
 	const open = Boolean(anchorEl);
-  	const id = open ? 'simple-popper' : undefined;
+  	const id = open ? 'color-popper' : undefined;
 
 	return (
         <>
@@ -80,11 +80,11 @@ const Label = ({ field, ...props }) => {
             </Fab>
             <Popover id={id} open={open} anchorEl={anchorEl} transition>
             	<Paper className={classes.menu}>
-            		{colors.map(item => (
+            		{Object.keys(colors).map(color => (
             			<ColorBox 
-            				key={item.name} 
-            				className={`${classes.colorBox} ${classes[item.name]}`} 
-            				onClick={() => selectColor(item.name)} 
+            				key={color} 
+            				className={`${classes.colorBox} ${classes[color]}`} 
+            				onClick={e => selectColor(color, e)} 
             				{...field} 
             				{...props}
             			/>
