@@ -42,6 +42,7 @@ const useStyles = makeStyles({
 
 const TicketForm = props => {
 	const [anchorEl, openLabelMenu] = useState(null);
+	const [withChecklist, showChecklist] = useState(false);
 	const classes = useStyles();
     
 	const showLabelMenu = e => {
@@ -50,6 +51,10 @@ const TicketForm = props => {
     
 	const hideLabelMenu = () => {
 		openLabelMenu(null);
+	};
+
+	const addCheckList = () => {
+		showChecklist(true);
 	};
 
 	return (
@@ -75,8 +80,13 @@ const TicketForm = props => {
 								fullWidth
 								component={TextField} 
 							/>
-							<CheckList 
-								
+							<Field 
+								name='color' 
+								component={props => <LabelField anchorEl={anchorEl} hideMenu={hideLabelMenu} { ...props } />} 
+							/>
+							<Field 
+								name='checkList' 
+								component={props => (withChecklist && <CheckList { ...props } />)} 
 							/>
 						</Grid>
 						<Grid item xs={1}>
@@ -84,17 +94,9 @@ const TicketForm = props => {
 								<Fab className={classes.fab} aria-describedby='color-popper' onClick={showLabelMenu} disableRipple>
 									<ColorLensOutlined />
 								</Fab>
-								<Field 
-									name='color' 
-									component={props => <LabelField anchorEl={anchorEl} hideMenu={hideLabelMenu} { ...props } />} 
-								/>
-								<Fab className={classes.fab} disableRipple>
+								<Fab className={classes.fab} onClick={addCheckList} disableRipple>
 									<CheckBoxOutlined />
 								</Fab>
-								<Field 
-									name='checkList' 
-									component={props => <CheckList { ...props } />} 
-								/>
 								<Fab className={classes.fab} disableRipple>
 									<ScheduleOutlined />
 								</Fab>

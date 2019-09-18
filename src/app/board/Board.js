@@ -38,7 +38,7 @@ const Board = props => {
 					</Box>
 				</div>
 			</DragDropContext>
-			<Dialog open={props.openedDialog} onClose={() => props.setOpen(null)}>
+			<Dialog open={!!props.openedDialog} onClose={() => props.setOpen(null)}>
 				<DialogTitle disableTypography>New Card</DialogTitle>
 				<DialogContent>
 					<TicketForm handleSubmit={props.handleSubmit} />
