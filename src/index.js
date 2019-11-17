@@ -70,8 +70,13 @@ const muiTheme = createMuiTheme({
 			text: {
 				color: '#E6F7FF'
 			}
+		},
+		MuiFormControlLabel: {
+			root: {
+				marginRight: 0
+			}
 		}
-	},
+	}
 });
 
 const theme = {

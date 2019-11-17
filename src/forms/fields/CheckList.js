@@ -1,63 +1,123 @@
 import React, { useState, useEffect } from 'react';
+import { Field } from 'formik';
 import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd';
 
 import { makeStyles } from '@material-ui/core/styles';
 
+import { TextField } from 'formik-material-ui';
 import Input from '@material-ui/core/Input';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
 	checkList: {
 		height: 'auto',         //calculate dynamically based on tasks number
+		paddingLeft: '15px'
+	},
+	label: {
+		'&.hidden': {
+			display: 'none'
+		}
+	},
+	inputField: {
+		'&.hidden': {
+			display: 'none'
+		}
+	},
+	button: {
+		backgroundColor: 'transparent',
+		color: '#10679e',
+		fontSize: '12px',
+		marginLeft: '15px',
+		'&:hover': {
+			backgroundColor: 'transparent'
+		}
 	}
 });
 
-const CheckList = ({ field, form, anchorEl, hideMenu, ...props }) => { 
-	const [tasks, handleUpdate] = useState({
-		task1: {
-			title: '',
-			label: '',
-			checked: false
-		}
-	});  
-	const [taskNames, changeOrder] = useState(['task1']);
+const CheckList = ({ value, anchorEl, hideMenu, setFieldValue }) => { 
+	const [focused, changeFocus] = useState(0);	
+
+	const refsCollection = {};
+
 	const classes = useStyles();
-	
-	const checkInput = React.createRef();
+
+	// useEffect(() => {
+	// 	document.onkeydown = e => {
+	// 		const event = e || window.event;
+
+	// 		if (event.keyCode === 13 && focused) {
+	// 			e.preventDefault();
+	// 			handleNewTaskClick();
+	// 		}
+	// 	};
+	// }, []);
+
+	// useEffect(() => {
+	// 	console.log(focused);
+	// });
+
+	// useEffect(() => {
+	// 	const focused = value.findIndex(item => item.focused);
+
+	// 	changeFocus(focused);
+	// }, []);
 
 	useEffect(() => {
-		checkInput.current.focus();
-	}, []);
+		console.log(refsCollection, focused);
+		setTimeout(() => {
+			refsCollection[focused] && refsCollection[focused].focus();
+		}, 0);
+	}, [focused]);
     
-	const handleChange = e => {										//add function for new tasks
-		const taskValue = e.target.value;
-		const isChecked = tasks[taskValue].checked;
+	const handleChange = (e, ind) => {			
+		// const taskValue = e.target.value;
+		// const isChecked = taskValue.checked;
+		// const result = [ ...value.list ];
+
+		// result[ind].checked = !isChecked;
         
-		handleUpdate({ ...tasks, [taskValue]: { ...tasks[taskValue], checked: !isChecked } });
+		// setFieldValue('checkList', result);
+		
+		// !isChecked && moveToTheEnd(ind);
 	};
 
-	const handleTaskTitleChange = e => {
-		const taskValue = e.target.name;
-		const taskTitle = e.target.value;
+	const handleTaskTitleChange = (e, ind) => {
+		const title = e.target.value;
 
-		handleUpdate({ ...tasks, [taskValue]: { ...tasks[taskValue], title: taskTitle } });
+		setFieldValue(`checkList.${ind}`, { ...value[ind], title });
 	};
 
-	const handleBlur = e => {
-		const taskValue = e.target.name;
-		const taskTitle = e.target.value;
+	const handleBlur = () => {
+		console.log('BLUR');
+		const result = [ ...value ];
 
-		handleUpdate({ ...tasks, [taskValue]: { ...tasks[taskValue], label: taskTitle } });
+		result[focused].focused = false;
+
+		// setFieldValue('checkList', result);
 	};
     
 	const moveTask = (source, destination) => {
-		const result = [ ...taskNames ];
-		const [removed] = result.splice(source.index, 1);
-		result.splice(destination.index, 0, removed);
+		// const result = [ ...taskNames ];
+		// const [ removed ] = result.splice(source.index, 1);
+		
+		// result.splice(destination.index, 0, removed);
 
-		changeOrder(result);
+		// setFieldValue('checkList', {
+		// 	taskNames: result,
+		// 	tasks
+		// });
+	};
+
+	const moveToTheEnd = ind => {
+		// const result = [ ...field.value ];
+		// const [ removed ] = result.splice(ind, 1);
+		
+		// result.splice(field.value.length - 1, 0, removed);
+
+		// setFieldValue('checkList', result);
 	};
 
 	const handleDragEnd = ({ source, destination }) => {
@@ -71,6 +131,22 @@ const CheckList = ({ field, form, anchorEl, hideMenu, ...props }) => {
 
 		moveTask(source, destination);
 	};
+
+	const handleNewTaskClick = () => {  // finish using array helpers
+		// const newTaskInd = field.value.length;
+		// const result = [ ...field.value, { title: '', checked: false, focused: true } ];
+
+		// setFieldValue('checkList', result);
+	};
+	
+	const handleLabelClick = (e, ind) => {
+		// const result = [ ...field.value ];
+
+		// result[focused].focused = false;
+		// result[ind].focused = true;
+
+		// setFieldValue('checkList', result);
+	};
     
 	return (
 		<DragDropContext onDragEnd={handleDragEnd}>
@@ -78,28 +154,37 @@ const CheckList = ({ field, form, anchorEl, hideMenu, ...props }) => {
 				{provided => (
 					<div className={classes.checkList} ref={provided.innerRef} {...provided.droppableProps}>
 						<FormGroup>
-							{taskNames.map((item, ind) => (
-								<Draggable key={item} draggableId={item + ind} index={ind}> 
+							{value.map((item, ind) => (
+								<Draggable key={ind} draggableId={item.title + ind} index={ind}> 
 									{provided => (
 										<div
 											ref={provided.innerRef}
 											{...provided.draggableProps}
 											{...provided.dragHandleProps} 
 										>
-											<FormControlLabel
-												control={
-													<Checkbox checked={tasks[item].checked} onChange={handleChange} value={item} />
-												}
-												label={tasks[item].label}
-												{...field}
-												{...props}
+											<Field
+												name={`checkList[${ind}].checked`}
+												component={() => (
+													<FormControlLabel
+														control={
+															<Checkbox checked={item.checked} onChange={e => handleChange(e, ind)} value={item} />
+														}
+														label={
+															<span 
+																className={`${classes.label} ${item.focused ? 'hidden' : ''}`} 
+																onClick={e => handleLabelClick(e, ind)}
+															>
+																{item.title}
+															</span>
+														}
+													/>
+												)}
 											/>
-											<Input 
-												name={item} 
-												value={tasks[item].title} 
-												inputRef={checkInput} 
-												onChange={handleTaskTitleChange} 
-												onBlur={handleBlur}
+											<Field
+												name={`checkList[${ind}].title`}
+												className={`${classes.inputField} ${!item.focused ? 'hidden' : ''}`}
+												inputRef={ref => refsCollection[ind] = ref} 
+												component={TextField}
 											/>
 										</div>
 									)}
@@ -109,6 +194,9 @@ const CheckList = ({ field, form, anchorEl, hideMenu, ...props }) => {
 					</div> 
 				)}
 			</Droppable>
+			<Button className={classes.button} onClick={handleNewTaskClick}>
+				Add Task
+			</Button>
 		</DragDropContext>
 	);	
 };

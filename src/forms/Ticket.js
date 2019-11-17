@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Formik, Field, Form } from 'formik';
+import React, { useState, useEffect } from 'react';
+import { Formik, Field, FieldArray, Form } from 'formik';
 import { TextField } from 'formik-material-ui';
 
 import { LabelField, CheckList } from './fields';
@@ -59,10 +59,12 @@ const TicketForm = props => {
 
 	return (
 		<Formik
+			initialValues={{ title: '', description: '', color: '', checkList: [{ title: '', checked: false, focused: true }] }}
 			onSubmit={props.handleSubmit}
-			render={({ errors, status, touched, isSubmitting }) => (
+			render={({ errors, status, touched, isSubmitting, values, setFieldValue }) => (
 				<Form className={classes.container}>
 					<Grid container>
+						{console.log(values)}
 						<Grid item xs={11}>
 							<Field 
 								label='Title'
@@ -84,9 +86,9 @@ const TicketForm = props => {
 								name='color' 
 								component={props => <LabelField anchorEl={anchorEl} hideMenu={hideLabelMenu} { ...props } />} 
 							/>
-							<Field 
+							<FieldArray 
 								name='checkList' 
-								component={props => (withChecklist && <CheckList { ...props } />)} 
+								render={arrayHelpers => <CheckList arrayHelpers={arrayHelpers} setFieldValue={setFieldValue} value={values.checkList} />} 
 							/>
 						</Grid>
 						<Grid item xs={1}>
