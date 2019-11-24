@@ -6,7 +6,8 @@ import { Card, CardHeader, CardContent } from '@material-ui/core';
 const useStyles = makeStyles({
 	card: {
 		backgroundColor: '#E6F7FF',
-		width: '100%' 
+		width: '100%',
+		marginBottom: '10px'
 	},
 	title: {
 		color: '#58758C',
@@ -14,11 +15,11 @@ const useStyles = makeStyles({
 	}
 });
 
-const Ticket = ({ title }) => {
+const Ticket = ({ title, listInd, ticketInd, openDialog }) => {
 	const classes = useStyles(); 
     
 	return (
-		<Card raised className={classes.card}>  
+		<Card raised className={classes.card} onClick={() => openDialog(listInd, ticketInd)}>  
 			<CardHeader title={title} classes={{title: classes.title}} />
 			<CardContent />
 		</Card>

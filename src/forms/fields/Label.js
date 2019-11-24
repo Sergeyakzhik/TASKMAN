@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
 import Paper from '@material-ui/core/Paper';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import CheckIcon from '@material-ui/icons/Check';
 
 const colors = {
 	RED: 'red',
@@ -28,12 +29,15 @@ const styleObject = {
 		padding: 0
 	},
 	colorBox: {
-		width: '13px',
-		height: '13px',
+		width: '23px',
+		height: '23px',
 		padding: '5px',
 		borderRadius: '50%',
 		margin: '2px',
 		cursor: 'pointer'
+	},
+	checkIcon: {
+		color: '#FFF'
 	}
 };
 
@@ -43,12 +47,13 @@ for (let key in colors) {
 
 const useStyles = makeStyles(styleObject);
 
-const ColorBox = props => (
+const ColorBox = ({ selected, classes, ...props }) => (
 	<div { ...props }>
+		{selected && <CheckIcon className={classes.checkIcon} />}
 	</div>
 );
 
-const Label = ({ field, form, anchorEl, hideMenu, ...props }) => {
+const Label = ({ field, form, anchorEl, hideMenu }) => {
 	const classes = useStyles();
     
 	const selectColor = color => {
@@ -57,18 +62,21 @@ const Label = ({ field, form, anchorEl, hideMenu, ...props }) => {
 	};
 
 	return (
-		<Popover id='color-popper' open={!!anchorEl} anchorEl={anchorEl} transition>
-			<Paper className={classes.menu}>
-				{Object.keys(colors).map(color => (
-					<ColorBox 
-						key={color} 
-						className={`${classes.colorBox} ${classes[color]}`} 
-						onClick={e => selectColor(color, e)} 
-						{...field} 
-						{...props}
-					/>
-				))}
-			</Paper>
+		<Popover id='color-popper' open={!!anchorEl} anchorEl={anchorEl}>
+			<ClickAwayListener onClickAway={hideMenu}>
+				<Paper className={classes.menu}>
+					{Object.keys(colors).map(color => (
+						<ColorBox 
+							key={color} 
+							className={`${classes.colorBox} ${classes[color]}`} 
+							selected={field.value === color}
+							classes={classes}
+							onClick={e => selectColor(color, e)} 
+							{...field} 
+						/>
+					))}
+				</Paper>
+			</ClickAwayListener>
 		</Popover>
 	);	
 };

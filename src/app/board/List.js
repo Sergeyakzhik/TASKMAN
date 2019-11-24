@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -9,11 +9,15 @@ import { Card, CardHeader, CardContent, Button } from '@material-ui/core';
 const useStyles = makeStyles({
 	card: {
 		backgroundColor: '#10679E',
-		width: '385px' 
+		width: '385px'
 	},
 	cardHeader: {
 		height: '25px',
 		backgroundColor: '#103F65'
+	},
+	cardContent: {
+		display: 'flex',
+		flexDirection: 'column'
 	},
 	title: {
 		color: '#FFF',
@@ -28,16 +32,16 @@ const useStyles = makeStyles({
 	}
 });
 
-const List = ({ title, name, tickets, openDialog }) => {
+const List = ({ title, listInd, tickets, openDialog }) => {
 	const classes = useStyles(); 
     
 	return (
 		<Card raised className={classes.card}>  
 			<CardHeader title={title} className={classes.cardHeader} classes={{title: classes.title}} />
-			<Droppable droppableId={name}>
+			<Droppable droppableId={listInd}>
 				{provided => (
 					<div ref={provided.innerRef} {...provided.droppableProps}>
-						<CardContent>
+						<CardContent className={classes.cardContent}>
 							{tickets.map((ticket, ind) => (
 								<Draggable key={ind + title} draggableId={ticket.title + ind + title} index={ind}> 
 									{provided => (
@@ -46,7 +50,12 @@ const List = ({ title, name, tickets, openDialog }) => {
 											{...provided.draggableProps}
 											{...provided.dragHandleProps} 
 										>
-											<Ticket title={ticket.title} />
+											<Ticket 
+												title={ticket.title} 
+												listInd={listInd} 
+												ticketInd={ind}
+												openDialog={openDialog} 
+											/>
 										</div>
 									)}
 								</Draggable>
@@ -56,7 +65,7 @@ const List = ({ title, name, tickets, openDialog }) => {
 					</div>
 				)}
 			</Droppable>
-			<Button className={classes.button} onClick={() => openDialog(name)}>
+			<Button className={classes.button} onClick={() => openDialog(listInd)}>
 				Add Ticket
 			</Button>
 		</Card>

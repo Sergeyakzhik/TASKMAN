@@ -1,18 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Board from './Board';
 
 import { boardOperations } from './duck';
 
 const BoardContainer = props => {
-
 	const [openedDialog, setOpen] = useState(null);
+	const [initialValues, setInitialValues] = useState(null);
+
+	useEffect(() => {
+		props.getLists();
+	}, []);
+
+	const openDialog = (listInd, ticketInd) => {
+		setOpen({ list: listInd, ticket: ticketInd });
+		ticketInd && setInitialValues(props.lists[listInd].tickets[ticketInd]);
+	};
+
+	const closeDialog = () => {
+		setOpen(null);
+		setInitialValues(null);
+	};
 
 	const handleSubmit = value => {
-		const { addTicket } = props;
+		const { addTicket, editTicket } = props;
 
-		addTicket(openedDialog, value);
+		initialValues ? editTicket(openedDialog.list, openedDialog.ticket, value) : addTicket(openedDialog.list, value);
+
 		setOpen(null);
+		setInitialValues(null);
 	};
 
 	const handleDragEnd = ({ source, destination }) => { //divide actions by Droppable type
@@ -31,10 +47,11 @@ const BoardContainer = props => {
  
 	return (
 		<Board 
-			listNames={props.listNames}
 			lists={props.lists}
 			openedDialog={openedDialog}
-			setOpen={setOpen}
+			initialValues={initialValues}
+			openDialog={openDialog}
+			closeDialog={closeDialog}
 			handleSubmit={handleSubmit} 
 			onDragEnd={handleDragEnd}
 		/>
@@ -42,12 +59,13 @@ const BoardContainer = props => {
 };
 
 const mapStateToProps = state => ({
-	listNames: state.board.listNames,
 	lists: state.board.lists
 });
 
 const mapDispatchToProps = {
+	getLists: boardOperations.getLists,
 	addTicket: boardOperations.addTicket,
+	editTicket: boardOperations.editTicket,
 	moveTicket: boardOperations.moveTicket
 };
 

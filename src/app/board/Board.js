@@ -24,13 +24,13 @@ const Board = props => {
 						flexWrap="nowrap"
 						m={20}
 					>
-						{props.listNames.map(name => (
-							<Box key={name} m={2}>
+						{props.lists.map((list, ind) => (
+							<Box key={list.title} m={2}>
 								<List
-									title={props.lists[name].title}
-									name={name}
-									tickets={props.lists[name].tickets}
-									openDialog={props.setOpen}
+									title={list.title}
+									listInd={ind.toString()}
+									tickets={list.tickets}
+									openDialog={props.openDialog}
 									onDragEnd={props.onDragEnd}
 								/>
 							</Box>
@@ -38,10 +38,10 @@ const Board = props => {
 					</Box>
 				</div>
 			</DragDropContext>
-			<Dialog open={!!props.openedDialog} onClose={() => props.setOpen(null)}>
-				<DialogTitle disableTypography>New Card</DialogTitle>
+			<Dialog open={!!props.openedDialog} onClose={() => props.closeDialog()}>
+				<DialogTitle disableTypography>{props.initialValues ? 'Edit Card' : 'New Card'}</DialogTitle>
 				<DialogContent>
-					<TicketForm handleSubmit={props.handleSubmit} />
+					<TicketForm initialValues={props.initialValues} handleSubmit={props.handleSubmit} />
 				</DialogContent>
 			</Dialog>
 		</>

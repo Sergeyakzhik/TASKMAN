@@ -1,7 +1,9 @@
 import { createActions } from 'reduxsauce';
 
 const { Types, Creators } = createActions({
-	addTicket: ['listName', 'ticket'],
+	getLists: null,
+	addTicket: ['listInd', 'ticket'],
+	editTicket: ['listInd', 'ticketInd', 'ticket'],
 	moveTicket: ['source', 'destination']
 });
 

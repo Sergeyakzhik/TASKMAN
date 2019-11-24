@@ -1,8 +1,10 @@
 import { Creators } from './actions';
 
-const { addTicket, moveTicket } = Creators;
+const { getLists, addTicket, editTicket, moveTicket } = Creators;
 
 export default {
+	getLists,
 	addTicket,
+	editTicket,
 	moveTicket
 };

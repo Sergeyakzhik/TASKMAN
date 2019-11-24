@@ -2,72 +2,53 @@ import { createReducer } from 'reduxsauce';
 import { Types } from './actions';
 
 const INITIAL_STATE = {
-	listNames: ['sprint', 'inProgress', 'testing', 'complete'],
-	lists: {
-		sprint: {
-			title: 'Sprint',
-			tickets: [
-				{
-					title: 'Add new column to table'
-				}
-			] 
-		},
-		inProgress: {
-			title: 'In Progress',
-			tickets: [
-				{
-					title: 'Add new column to table'
-				}
-			]
-		},
-		testing: {
-			title: 'Testing',
-			tickets: [
-				{
-					title: 'Add new column to table'
-				}
-			]
-		},
-		complete: {
-			title: 'Complete',
-			tickets: [
-				{
-					title: 'Add new column to table'
-				}
-			]
-		}
-	}
+	lists: []
 };
 
-const addTicket = (state = INITIAL_STATE, action) => ({ 
-	...state, 
-	lists: {
-		...state.lists, 
-		[action.listName]: {
-			...state.lists[action.listName], 
-			tickets: [
-				...state.lists[action.listName].tickets,
-				action.ticket
-			]
-		}
-	}
-});
+const getLists = (state = INITIAL_STATE) => {
+	const lists = JSON.parse(localStorage.getItem('lists'));
+
+	return {
+		...state, 
+		lists
+	};
+};
+
+const addTicket = (state = INITIAL_STATE, action) => {
+	const result = [ ...state.lists ];
+
+	result[action.listInd].tickets.push(action.ticket);
+
+	return {
+		...state, 
+		lists: result
+	};
+};
+
+const editTicket = (state = INITIAL_STATE, action) => {
+	const result = [ ...state.lists ];
+
+	result[action.listInd].tickets[action.ticketInd] = action.ticket;
+
+	return {
+		...state, 
+		lists: result
+	};
+}; 
 
 const moveTicket = (state = INITIAL_STATE, action) => {
+	const lists = [ ...state.lists ];
+
 	if (action.source.droppableId === action.destination.droppableId) {
 		const result = [ ...state.lists[action.source.droppableId].tickets ];
 		const [removed] = result.splice(action.source.index, 1);
+
 		result.splice(action.destination.index, 0, removed);
+		lists[action.source.droppableId].tickets = result;
 
 		return {
 			...state,
-			lists: {
-				...state.lists, 
-				[action.source.droppableId]: {
-					...state.lists[action.source.droppableId], 
-					tickets: result
-				}
-			}
+			lists
 		};
 	} else {
 		const sourceClone = [ ...state.lists[action.source.droppableId].tickets ];
@@ -75,27 +56,21 @@ const moveTicket = (state = INITIAL_STATE, action) => {
 		const [removed] = sourceClone.splice(action.source.index, 1);
 
 		destinationClone.splice(action.destination.index, 0, removed);
+		lists[action.source.droppableId].tickets = sourceClone;
+		lists[action.destination.droppableId].tickets = destinationClone;
 
 		return {
 			...state,
-			lists: {
-				...state.lists, 
-				[action.source.droppableId]: {
-					...state.lists[action.source.droppableId], 
-					tickets: sourceClone
-				},
-				[action.destination.droppableId]: {
-					...state.lists[action.destination.droppableId], 
-					tickets: destinationClone
-				}
-			}
+			lists
 		};
 	}
 };
 
 const HANDLERS = {
 	[Types.ADD_TICKET]: addTicket,
-	[Types.MOVE_TICKET]: moveTicket
+	[Types.EDIT_TICKET]: editTicket,
+	[Types.MOVE_TICKET]: moveTicket,
+	[Types.GET_LISTS]: getLists
 };
 
 export default createReducer(INITIAL_STATE, HANDLERS);

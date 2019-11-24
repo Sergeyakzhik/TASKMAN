@@ -40,9 +40,14 @@ const useStyles = makeStyles({
 	}
 });
 
-const TicketForm = props => {
+const TicketForm = ({ initialValues, ...props }) => {
 	const [anchorEl, openLabelMenu] = useState(null);
 	const [withChecklist, showChecklist] = useState(false);
+
+	useEffect(() => {
+		initialValues && initialValues.checkList && showChecklist(true);
+	}, [initialValues]);
+
 	const classes = useStyles();
     
 	const showLabelMenu = e => {
@@ -59,12 +64,11 @@ const TicketForm = props => {
 
 	return (
 		<Formik
-			initialValues={{ title: '', description: '', color: '', checkList: [{ title: '', checked: false, focused: true }] }}
+			initialValues={initialValues || { title: '', description: '', color: '', checkList: [{ title: '', checked: false }] }}
 			onSubmit={props.handleSubmit}
-			render={({ errors, status, touched, isSubmitting, values, setFieldValue }) => (
+			render={({ errors, status, touched, values, setFieldValue, handleSubmit }) => (
 				<Form className={classes.container}>
 					<Grid container>
-						{console.log(values)}
 						<Grid item xs={11}>
 							<Field 
 								label='Title'
@@ -86,10 +90,12 @@ const TicketForm = props => {
 								name='color' 
 								component={props => <LabelField anchorEl={anchorEl} hideMenu={hideLabelMenu} { ...props } />} 
 							/>
-							<FieldArray 
-								name='checkList' 
-								render={arrayHelpers => <CheckList arrayHelpers={arrayHelpers} setFieldValue={setFieldValue} value={values.checkList} />} 
-							/>
+							{withChecklist && (
+								<FieldArray 
+									name='checkList' 
+									render={arrayHelpers => <CheckList arrayHelpers={arrayHelpers} setFieldValue={setFieldValue} value={values.checkList} />} 
+								/>
+							)}
 						</Grid>
 						<Grid item xs={1}>
 							<Grid container direction='column' justify='center' alignContent='center' alignItems='center'>
@@ -105,8 +111,8 @@ const TicketForm = props => {
 							</Grid>	
 						</Grid>
 					</Grid>
-					<Button className={classes.button} type='submit'>
-						Add Card
+					<Button className={classes.button} onClick={handleSubmit}>
+						{initialValues ? 'Edit' : 'Add'}
 					</Button>
 				</Form>
 			)}

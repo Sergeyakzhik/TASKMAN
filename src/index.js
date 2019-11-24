@@ -33,12 +33,6 @@ const muiTheme = createMuiTheme({
 				'&:hover:not($disabled):not($focused):not($error) $notchedOutline': {
 					borderColor: '#10679E'
 				},
-			},
-			input: {
-				
-			},
-			notchedOutline: {
-				
 			}
 		},
 		MuiDialog: {

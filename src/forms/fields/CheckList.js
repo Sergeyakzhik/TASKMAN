@@ -4,19 +4,23 @@ import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import { TextField } from 'formik-material-ui';
-import Input from '@material-ui/core/Input';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
 	checkList: {
-		height: 'auto',         //calculate dynamically based on tasks number
-		paddingLeft: '15px'
+		paddingLeft: '15px',
+		display: 'flex',
+		flexDirection: 'column'
 	},
 	label: {
+		display: 'inline-block',
+		minWidth: '200px',
+		height: '24px',
 		'&.hidden': {
 			display: 'none'
 		}
@@ -37,87 +41,31 @@ const useStyles = makeStyles({
 	}
 });
 
-const CheckList = ({ value, anchorEl, hideMenu, setFieldValue }) => { 
+const CheckList = ({ value, setFieldValue, arrayHelpers }) => { 
 	const [focused, changeFocus] = useState(0);	
 
 	const refsCollection = {};
 
 	const classes = useStyles();
 
-	// useEffect(() => {
-	// 	document.onkeydown = e => {
-	// 		const event = e || window.event;
-
-	// 		if (event.keyCode === 13 && focused) {
-	// 			e.preventDefault();
-	// 			handleNewTaskClick();
-	// 		}
-	// 	};
-	// }, []);
-
-	// useEffect(() => {
-	// 	console.log(focused);
-	// });
-
-	// useEffect(() => {
-	// 	const focused = value.findIndex(item => item.focused);
-
-	// 	changeFocus(focused);
-	// }, []);
-
 	useEffect(() => {
-		console.log(refsCollection, focused);
-		setTimeout(() => {
-			refsCollection[focused] && refsCollection[focused].focus();
-		}, 0);
+		refsCollection[focused] && refsCollection[focused].focus();
 	}, [focused]);
-    
-	const handleChange = (e, ind) => {			
-		// const taskValue = e.target.value;
-		// const isChecked = taskValue.checked;
-		// const result = [ ...value.list ];
 
-		// result[ind].checked = !isChecked;
-        
-		// setFieldValue('checkList', result);
-		
-		// !isChecked && moveToTheEnd(ind);
-	};
-
-	const handleTaskTitleChange = (e, ind) => {
-		const title = e.target.value;
-
-		setFieldValue(`checkList.${ind}`, { ...value[ind], title });
+	const moveTask = (source, destination) => {
+		arrayHelpers.swap(source.index, destination.index);
 	};
 
 	const handleBlur = () => {
-		console.log('BLUR');
-		const result = [ ...value ];
-
-		result[focused].focused = false;
-
-		// setFieldValue('checkList', result);
-	};
-    
-	const moveTask = (source, destination) => {
-		// const result = [ ...taskNames ];
-		// const [ removed ] = result.splice(source.index, 1);
-		
-		// result.splice(destination.index, 0, removed);
-
-		// setFieldValue('checkList', {
-		// 	taskNames: result,
-		// 	tasks
-		// });
+		changeFocus(null);
 	};
 
-	const moveToTheEnd = ind => {
-		// const result = [ ...field.value ];
-		// const [ removed ] = result.splice(ind, 1);
-		
-		// result.splice(field.value.length - 1, 0, removed);
+	const handleCheck = ind => {
+		const wasChecked = value[ind].checked;
 
-		// setFieldValue('checkList', result);
+		setFieldValue(`checkList[${ind}].checked`, !wasChecked);
+
+		!wasChecked && arrayHelpers.swap(ind, value.length - 1);
 	};
 
 	const handleDragEnd = ({ source, destination }) => {
@@ -132,28 +80,24 @@ const CheckList = ({ value, anchorEl, hideMenu, setFieldValue }) => {
 		moveTask(source, destination);
 	};
 
-	const handleNewTaskClick = () => {  // finish using array helpers
-		// const newTaskInd = field.value.length;
-		// const result = [ ...field.value, { title: '', checked: false, focused: true } ];
-
-		// setFieldValue('checkList', result);
+	const handleNewTaskClick = () => {
+		arrayHelpers.push({ title: '', checked: false });
+		setTimeout(() => {
+			changeFocus(value.length);
+		}, 0);
 	};
 	
 	const handleLabelClick = (e, ind) => {
-		// const result = [ ...field.value ];
-
-		// result[focused].focused = false;
-		// result[ind].focused = true;
-
-		// setFieldValue('checkList', result);
+		e.preventDefault();
+		changeFocus(ind);
 	};
     
 	return (
 		<DragDropContext onDragEnd={handleDragEnd}>
 			<Droppable droppableId='checkList'>
 				{provided => (
-					<div className={classes.checkList} ref={provided.innerRef} {...provided.droppableProps}>
-						<FormGroup>
+					<div ref={provided.innerRef} {...provided.droppableProps}>
+						<FormGroup className={classes.checkList}>
 							{value.map((item, ind) => (
 								<Draggable key={ind} draggableId={item.title + ind} index={ind}> 
 									{provided => (
@@ -164,14 +108,15 @@ const CheckList = ({ value, anchorEl, hideMenu, setFieldValue }) => {
 										>
 											<Field
 												name={`checkList[${ind}].checked`}
-												component={() => (
+											>
+												{({ field }) => (
 													<FormControlLabel
 														control={
-															<Checkbox checked={item.checked} onChange={e => handleChange(e, ind)} value={item} />
+															<Checkbox checked={field.value} onChange={() => handleCheck(ind)} />
 														}
 														label={
 															<span 
-																className={`${classes.label} ${item.focused ? 'hidden' : ''}`} 
+																className={`${classes.label} ${focused === ind ? 'hidden' : ''}`} 
 																onClick={e => handleLabelClick(e, ind)}
 															>
 																{item.title}
@@ -179,18 +124,26 @@ const CheckList = ({ value, anchorEl, hideMenu, setFieldValue }) => {
 														}
 													/>
 												)}
-											/>
+											</Field>
 											<Field
 												name={`checkList[${ind}].title`}
-												className={`${classes.inputField} ${!item.focused ? 'hidden' : ''}`}
-												inputRef={ref => refsCollection[ind] = ref} 
-												component={TextField}
-											/>
+											>
+												{({ field }) => (
+													<ClickAwayListener onClickAway={handleBlur}>
+														<Input 
+															className={`${classes.inputField} ${focused !== ind ? 'hidden' : ''}`}
+															inputRef={ref => refsCollection[ind] = ref} 
+															{ ...field } 
+														/>
+													</ClickAwayListener>
+												)}
+											</Field>
 										</div>
 									)}
 								</Draggable>
 							))}
 						</FormGroup>
+						{provided.placeholder}
 					</div> 
 				)}
 			</Droppable>
