@@ -62,12 +62,35 @@ const muiTheme = createMuiTheme({
 				}
 			},
 			text: {
-				color: '#E6F7FF'
+				color: '#E6F7FF',
+				fontFamily: 'Montserrat',
+				fontSize: '19px',
+				textTransform: 'none'
+			},
+			outlined: {
+				backgroundColor: 'transparent',
+				border: '2px solid #13659C',
+				color: '#13659C',
+				fontFamily: 'Montserrat',
+				fontSize: '19px',
+				textTransform: 'none',
+				'&:hover': {
+					backgroundColor: '#10679E',
+					color: '#E6F7FF'
+				}
 			}
 		},
 		MuiFormControlLabel: {
 			root: {
 				marginRight: 0
+			}
+		},
+		MuiTypography: {
+			h3: {
+				fontFamily: 'Montserrat',
+				fontSize: '24px',
+				lineHeight: '32px',
+				color: '#C9C9C9'
 			}
 		}
 	}

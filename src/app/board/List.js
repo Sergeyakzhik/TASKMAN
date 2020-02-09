@@ -4,12 +4,17 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Ticket from './Ticket';
 
-import { Card, CardHeader, CardContent, Button } from '@material-ui/core';
+import { Card, CardHeader, CardContent, Button, IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles({
 	card: {
 		backgroundColor: '#10679E',
-		width: '385px'
+		width: '385px',
+		position: 'relative',
+		'&:hover .close-icon': {
+			display: 'inline'
+		}
 	},
 	cardHeader: {
 		height: '25px',
@@ -29,6 +34,12 @@ const useStyles = makeStyles({
 		'&:hover': {
 			backgroundColor: 'transparent'
 		}
+	},
+	closeIcon: {
+		position: 'absolute',
+		right: 0,
+		padding: '5px',
+		display: 'none'
 	}
 });
 
@@ -36,7 +47,10 @@ const List = ({ title, listInd, tickets, openDialog }) => {
 	const classes = useStyles(); 
     
 	return (
-		<Card raised className={classes.card}>  
+		<Card raised className={classes.card}>
+			<IconButton className={`${classes.closeIcon} close-icon`}>
+				<CloseIcon />
+			</IconButton>
 			<CardHeader title={title} className={classes.cardHeader} classes={{title: classes.title}} />
 			<Droppable droppableId={listInd}>
 				{provided => (

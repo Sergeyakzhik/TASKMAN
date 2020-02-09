@@ -6,6 +6,7 @@ import { boardOperations } from './duck';
 
 const BoardContainer = props => {
 	const [openedDialog, setOpen] = useState(null);
+	const [listDialog, setListDialog] = useState(false);
 	const [initialValues, setInitialValues] = useState(null);
 
 	useEffect(() => {
@@ -14,7 +15,7 @@ const BoardContainer = props => {
 
 	const openDialog = (listInd, ticketInd) => {
 		setOpen({ list: listInd, ticket: ticketInd });
-		ticketInd && setInitialValues(props.lists[listInd].tickets[ticketInd]);
+		ticketInd !== undefined && setInitialValues(props.lists[listInd].tickets[ticketInd]);
 	};
 
 	const closeDialog = () => {
@@ -29,6 +30,10 @@ const BoardContainer = props => {
 
 		setOpen(null);
 		setInitialValues(null);
+	};
+
+	const handleNewList = ({ name }) => {
+		props.addList(name);
 	};
 
 	const handleDragEnd = ({ source, destination }) => { //divide actions by Droppable type
@@ -49,10 +54,14 @@ const BoardContainer = props => {
 		<Board 
 			lists={props.lists}
 			openedDialog={openedDialog}
+			listDialog={listDialog}
 			initialValues={initialValues}
 			openDialog={openDialog}
 			closeDialog={closeDialog}
-			handleSubmit={handleSubmit} 
+			openListDialog={() => setListDialog(true)}
+			closeListDialog={() => setListDialog(false)}
+			handleSubmit={handleSubmit}
+			handleNewList={handleNewList} 
 			onDragEnd={handleDragEnd}
 		/>
 	);
@@ -64,6 +73,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
 	getLists: boardOperations.getLists,
+	addList: boardOperations.addList,
 	addTicket: boardOperations.addTicket,
 	editTicket: boardOperations.editTicket,
 	moveTicket: boardOperations.moveTicket

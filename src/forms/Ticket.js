@@ -42,11 +42,6 @@ const useStyles = makeStyles({
 
 const TicketForm = ({ initialValues, ...props }) => {
 	const [anchorEl, openLabelMenu] = useState(null);
-	const [withChecklist, showChecklist] = useState(false);
-
-	useEffect(() => {
-		initialValues && initialValues.checkList && showChecklist(true);
-	}, [initialValues]);
 
 	const classes = useStyles();
     
@@ -58,13 +53,15 @@ const TicketForm = ({ initialValues, ...props }) => {
 		openLabelMenu(null);
 	};
 
-	const addCheckList = () => {
-		showChecklist(true);
+	const addCheckList = (checkList, setFieldValue) => {
+		if (checkList.length === 0) {
+			setFieldValue('checkList', [{ title: '', checked: false }]);
+		}
 	};
 
 	return (
 		<Formik
-			initialValues={initialValues || { title: '', description: '', color: '', checkList: [{ title: '', checked: false }] }}
+			initialValues={initialValues || { title: '', description: '', color: '', checkList: [] }}
 			onSubmit={props.handleSubmit}
 			render={({ errors, status, touched, values, setFieldValue, handleSubmit }) => (
 				<Form className={classes.container}>
@@ -90,7 +87,7 @@ const TicketForm = ({ initialValues, ...props }) => {
 								name='color' 
 								component={props => <LabelField anchorEl={anchorEl} hideMenu={hideLabelMenu} { ...props } />} 
 							/>
-							{withChecklist && (
+							{values.checkList.length > 0 && (
 								<FieldArray 
 									name='checkList' 
 									render={arrayHelpers => <CheckList arrayHelpers={arrayHelpers} setFieldValue={setFieldValue} value={values.checkList} />} 
@@ -102,7 +99,7 @@ const TicketForm = ({ initialValues, ...props }) => {
 								<Fab className={classes.fab} aria-describedby='color-popper' onClick={showLabelMenu} disableRipple>
 									<ColorLensOutlined />
 								</Fab>
-								<Fab className={classes.fab} onClick={addCheckList} disableRipple>
+								<Fab className={classes.fab} onClick={() => addCheckList(values.checkList, setFieldValue)} disableRipple>
 									<CheckBoxOutlined />
 								</Fab>
 								<Fab className={classes.fab} disableRipple>

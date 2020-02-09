@@ -6,7 +6,7 @@ const INITIAL_STATE = {
 };
 
 const getLists = (state = INITIAL_STATE) => {
-	const lists = JSON.parse(localStorage.getItem('lists'));
+	const lists = JSON.parse(localStorage.getItem('lists')) || [];
 
 	return {
 		...state, 
@@ -14,10 +14,23 @@ const getLists = (state = INITIAL_STATE) => {
 	};
 };
 
+const addList = (state = INITIAL_STATE, action) => {
+	const result = [ ...state.lists ];
+
+	result.push({ title: action.name, tickets: [] });
+
+	return {
+		...state,
+		lists: result
+	};
+};
+
 const addTicket = (state = INITIAL_STATE, action) => {
 	const result = [ ...state.lists ];
 
 	result[action.listInd].tickets.push(action.ticket);
+
+	localStorage.setItem('lists', JSON.stringify(result));
 
 	return {
 		...state, 
@@ -29,6 +42,8 @@ const editTicket = (state = INITIAL_STATE, action) => {
 	const result = [ ...state.lists ];
 
 	result[action.listInd].tickets[action.ticketInd] = action.ticket;
+
+	localStorage.setItem('lists', JSON.stringify(result));
 
 	return {
 		...state, 
@@ -46,6 +61,8 @@ const moveTicket = (state = INITIAL_STATE, action) => {
 		result.splice(action.destination.index, 0, removed);
 		lists[action.source.droppableId].tickets = result;
 
+		localStorage.setItem('lists', JSON.stringify(lists));
+
 		return {
 			...state,
 			lists
@@ -59,6 +76,8 @@ const moveTicket = (state = INITIAL_STATE, action) => {
 		lists[action.source.droppableId].tickets = sourceClone;
 		lists[action.destination.droppableId].tickets = destinationClone;
 
+		localStorage.setItem('lists', JSON.stringify(lists));
+
 		return {
 			...state,
 			lists
@@ -67,6 +86,7 @@ const moveTicket = (state = INITIAL_STATE, action) => {
 };
 
 const HANDLERS = {
+	[Types.ADD_LIST]: addList,
 	[Types.ADD_TICKET]: addTicket,
 	[Types.EDIT_TICKET]: editTicket,
 	[Types.MOVE_TICKET]: moveTicket,
