@@ -4,6 +4,7 @@ import { TextField } from 'formik-material-ui';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
+import { signupValidation } from './validations';
 
 const useStyles = makeStyles({
 	container: {
@@ -27,8 +28,10 @@ const SignupForm = props => {
 				password: '',
 				password2: ''
 			}}
+			validationSchema={signupValidation}
 			onSubmit={props.onSubmit}
-			render={({ errors, status, touched, values, setFieldValue, handleSubmit }) => (
+		>
+			{({ values, submitForm }) => (
 				<Form className={classes.container}>
 					<Field 
 						label='Username'
@@ -62,12 +65,12 @@ const SignupForm = props => {
 						fullWidth
 						component={TextField} 
 					/>
-					<Button className={classes.button} onClick={handleSubmit}>
+					<Button className={classes.button} onClick={() => submitForm(values)}>
 						Sign Up
 					</Button>
 				</Form>
 			)}
-		/>
+		</Formik>
 	);	
 };
 

@@ -1,9 +1,10 @@
 import React from 'react';
-import { Formik, Field, Form } from 'formik';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { TextField } from 'formik-material-ui';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
+import { loginValidation } from './validations';
 
 const useStyles = makeStyles({
 	container: {
@@ -25,8 +26,10 @@ const LoginForm = props => {
 				username: '',
 				password: ''
 			}}
+			validationSchema={loginValidation}
 			onSubmit={props.onSubmit}
-			render={({ errors, status, touched, values, setFieldValue, handleSubmit }) => (
+		>
+			{({ values, submitForm }) => (
 				<Form className={classes.container}>
 					<Field 
 						label='Username'
@@ -44,12 +47,12 @@ const LoginForm = props => {
 						fullWidth
 						component={TextField} 
 					/>
-					<Button className={classes.button} onClick={handleSubmit}>
+					<Button className={classes.button} onClick={() => submitForm(values)}>
 						Log In
 					</Button>
 				</Form>
 			)}
-		/>
+		</Formik>
 	);	
 };
 

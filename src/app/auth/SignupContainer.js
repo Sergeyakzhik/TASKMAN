@@ -1,20 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import Signup from './Signup';
-import { Users } from '../../api';
+import { userOperations } from './duck';
 
-const SignupContainer = () => {
+const SignupContainer = ({ history, user, signUp }) => {
+
+	useEffect(() => {
+		user && history.push('/board');
+	}, user);
     
 	const handleSubmit = async ({ password2, ...values }) => {
-		try {
-			let result = await Users.signup(values);
-			result = await result.json();
-
-			console.log(result);
-		} catch(e) {
-			console.log(e);
-		} 
+		signUp(values);
 	};
  
 	return (
@@ -25,14 +24,17 @@ const SignupContainer = () => {
 };
 
 const mapStateToProps = state => ({
-
+	user: state.user.user
 });
 
 const mapDispatchToProps = {
-
+	signUp: userOperations.signUp
 };
 
-export default connect(
-	mapStateToProps, 
-	mapDispatchToProps
+export default compose(
+	withRouter,
+	connect(
+		mapStateToProps, 
+		mapDispatchToProps
+	)
 )(SignupContainer);

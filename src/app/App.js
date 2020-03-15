@@ -10,7 +10,7 @@ import { userOperations } from './auth/duck';
 import { Home } from './home';
 import { Login, Signup } from './auth';
 import { Board } from './board';
-import { Header } from './common';
+import { Header, ProtectedRoute } from './common';
 
 WebFont.load({
 	google: {
@@ -30,7 +30,7 @@ const App = ({ getUser }) => {
 				<Route exact path='/' component={Home} />
 				<Route exact path='/login' component={Login} />
 				<Route exact path='/signup' component={Signup} />
-				<Route exact path='/board' component={Board} />
+				<ProtectedRoute exact path='/board' component={Board} />
 			</main> 
 		</Router>
 	);

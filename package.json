@@ -19,7 +19,8 @@
     "redux": "4.0.1",
     "redux-thunk": "2.3.0",
     "reduxsauce": "1.1.0",
-    "webfontloader": "1.6.28"
+    "webfontloader": "1.6.28",
+    "yup": "^0.28.1"
   },
   "scripts": {
     "start": "react-scripts start",

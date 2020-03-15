@@ -26,10 +26,10 @@ const useStyles = makeStyles({
 	}
 });
 
-const Login = ({ onSubmit }) => {
+const Login = ({ loginChecked, onSubmit }) => {
 	const classes = useStyles();
 
-	return (
+	return loginChecked ? (
 		<Container>
 			<Card raised className={classes.card}>
 				<CardHeader title="Log In" className={classes.cardHeader} />
@@ -38,7 +38,7 @@ const Login = ({ onSubmit }) => {
 				</CardContent>
 			</Card>
 		</Container>
-	);
+	) : <></>;
 };
 
 export default Login;

@@ -21,7 +21,7 @@ const muiTheme = createMuiTheme({
 	overrides: {
 		MuiOutlinedInput: {
 			root: {
-				marginBottom: '10px',
+				marginBottom: '35px',
 				padding: '0 30px',
 				boxShadow: '0 3px 4px -1px rgba(128, 128, 128, 0.3)',
 				borderWidth: 2,
@@ -33,6 +33,12 @@ const muiTheme = createMuiTheme({
 				'&:hover:not($disabled):not($focused):not($error) $notchedOutline': {
 					borderColor: '#10679E'
 				},
+			}
+		},
+		MuiFormHelperText: {
+			contained: {
+				position: 'absolute',
+				top: '-30px'
 			}
 		},
 		MuiDialog: {

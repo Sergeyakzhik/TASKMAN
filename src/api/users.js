@@ -5,7 +5,7 @@ import config from './config';
 const URL = config.PREFIX;
 
 export default {
-	login: data => {
+	logIn: data => {
 		const options = {
 			method: 'POST',
 			headers: {
@@ -17,7 +17,7 @@ export default {
 		return fetch(URL + 'login/', options);
 	},
     
-	signup: data => {
+	signUp: data => {
 		const options = {
 			method: 'POST',
 			headers: {

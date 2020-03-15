@@ -1,11 +1,36 @@
 import { Creators } from './actions';
 import { Users } from '../../../api';
 
-const requestUserAction = Creators.requestUser;
-const receiveUserAction = Creators.receiveUser;
+const {
+	requestUser,
+	receiveUser,
+	requestSignUp,
+	receiveSignUpSuccess,
+	receiveSignUpError
+} = Creators;
+
+const signUp = data => async dispatch => {
+	dispatch(requestSignUp());
+
+	try {
+		const response = await Users.signUp(data);
+		const result = await response.json();
+
+		console.log(result);
+
+		if (result.token) {
+			localStorage.setItem('token', result.token);
+		}
+	
+		dispatch(receiveSignUpSuccess(result));
+	} catch (err) {
+		console.log(err);
+		return dispatch(receiveSignUpError());
+	}
+};
 
 const getUser = () => async dispatch => {
-	dispatch(requestUserAction());
+	dispatch(requestUser());
 	
 	const token = localStorage.getItem('token');
 
@@ -14,20 +39,21 @@ const getUser = () => async dispatch => {
 			const response = await Users.getUser(token);
 
 			if (response.status !== 200) {
-				return dispatch(receiveUserAction({}));
+				return dispatch(receiveUser(null));
 			}
 
 			const result = await response.json();
 		
-			dispatch(receiveUserAction(result));
+			dispatch(receiveUser(result));
 		} catch (err) {
 			console.log(err);
 		}
 	} else {
-		dispatch(receiveUserAction({}));
+		dispatch(receiveUser(null));
 	}
 };
 
 export default {
+	signUp,
 	getUser
 };
